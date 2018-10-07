@@ -3,7 +3,7 @@
  * @author   Kuznetsov A.(RivandBlack).
  * @version  V 0.0.2
  * @date     29.09.2018
- * @brief     SdHeaderUpdater - An application that automatically updates the version and time in doxygen headers of all source files.
+ * @brief    SdHeaderUpdater - An application that automatically updates the version and time in doxygen headers of all source files.
  ************************************************************************************************************************************************************/
 #include <iostream>
 #include <string>
@@ -14,7 +14,7 @@ using ::std::flush;
 using ::std::ifstream;
 using ::std::string;
 
-int main(int argc, char* argv[]) {
+int main(const int argc, char* argv[]) {
     if (argc == 1) {  // The application was started without arguments.
         cout << "SdHeaderUpdater application, type --help for help." << flush << endl;
         return 0;
@@ -22,12 +22,17 @@ int main(int argc, char* argv[]) {
     for (int i = 1; i < argc; i++) {
         string current_command(argv[i]);
         if (!current_command.compare("update")) {
-            string new_version(argv[++i]);
+            if (i < argc - 1) string new_version(argv[++i]);
+			else {
+				cout << "You must give the version number, for example 'v 0.2.1'" << flush << endl;
+				return 0;
+			}
             auto [flag, list_of_source_files] = FileListReader::ParseFileWithListOfSourceFiles("CMakeLists.txt");
             if (!flag) {
                 cout << "Could not process the file with the list of source files." << flush << endl;
                 return 0;
             }
+			for (auto& c : list_of_source_files) cout << c << endl;
             cout << "Source files was updated." << flush << endl;
             continue;
         }

@@ -8,7 +8,7 @@ set(CMAKE_CXX_FLAGS_MINSIZEREL      "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -pthrea
 set(CMAKE_CXX_FLAGS_RELEASE         "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -pthread -O3 -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO  "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -pthread -O2 -g")
 
-add_executable(${PROJECT_NAME}
+add_executable (${PROJECT_NAME}
     "file_list_reader.h"
     "file_list_reader.cpp"
     "main.cpp"
