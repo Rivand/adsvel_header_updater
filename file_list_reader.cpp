@@ -1,8 +1,8 @@
 /**************************************************************************************************************************************************************
  * @file     file_list_reader.cpp
  * @author   Kuznetsov A.(RivandBlack).
- * @version  V 0.0.2
- * @date     29.09.2018
+ * @version  V 0.0.4
+ * @date     07.10.2018
  * @brief    Class-singleton that reads files with a list of source code files, parses it and returns the corresponding list.
  ************************************************************************************************************************************************************/
 #include "file_list_reader.h"
