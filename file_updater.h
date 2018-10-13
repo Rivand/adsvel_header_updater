@@ -9,5 +9,5 @@
 #include <string>
 class FileUpdater {
 public:
-	static bool UpdateFile(const std::string& in_file_name, const std::string& in_version_name);
+    static std::pair<bool,std::string> UpdateFile(const std::string& in_file_name, const std::string& in_version_name);
 };

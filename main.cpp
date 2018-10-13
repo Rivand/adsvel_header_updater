@@ -24,12 +24,10 @@ int main(const int argc, char* argv[]) {
     for (int i = 1; i < argc; i++) {
         string current_command(argv[i]);
         if (!current_command.compare("update")) {
-			string version_name{};
+            string version_name{};
             if (i < argc - 1) {
-				version_name = argv[++i];
-            }
-            else
-            {
+                version_name = argv[++i];
+            } else {
                 cout << "You must give the version number, for example 'v 0.2.1'" << flush << endl;
                 return 0;
             }
@@ -39,12 +37,8 @@ int main(const int argc, char* argv[]) {
                 return 0;
             }
             for (auto& c : list_of_source_files) {
-                if (FileUpdater::UpdateFile(c, version_name)) {
-					cout << "File " << c << " was updated." << flush << endl;
-                }
-				else {
-					cout << "File " << c << " has not been updated." << flush << endl;
-				}
+                auto [status_b, status_s] = FileUpdater::UpdateFile(c, version_name);
+                cout << c << " - " << status_s << flush << endl;
             }
             cout << "All files have been processed." << flush << endl;
             continue;
@@ -54,8 +48,7 @@ int main(const int argc, char* argv[]) {
             continue;
         }
         // The command is not recognized, we display the corresponding warning.
-        cout << "SdHeaderUpdater: " << current_command <<
-            " is not a SdHeaderUpdater command. See \'SdHeaderUpdater --help\'." << flush << endl;
+        cout << "SdHeaderUpdater: " << current_command << " is not a SdHeaderUpdater command. See \'SdHeaderUpdater --help\'." << flush << endl;
     }
 
     return 0;
