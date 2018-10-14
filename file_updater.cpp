@@ -35,6 +35,8 @@ pair<bool, string> FileUpdater::UpdateFile(const std::string& in_file_name, cons
     oss_last_write_time << std::setfill('0') << setw(2) << t.tm_mday << "." << setw(2) << t.tm_mon << "." << 1900 + t.tm_year << " " << setw(2) << t.tm_hour << ":" << setw(2) << t.tm_min << ":" << setw(2) << t.tm_sec
                         << std::flush << std::flush << std::endl;
     string last_write_time_str_real{oss_last_write_time.str()};
+    last_write_time_str_real.pop_back();  // Remove endl;
+
     // Read the file.
     vector<string> source_file_content;
     string str{};
@@ -42,6 +44,7 @@ pair<bool, string> FileUpdater::UpdateFile(const std::string& in_file_name, cons
         source_file_content.push_back(std::move(str));
     }
     in_source_file.close();
+
     // Find the line with the date.
     string last_write_time_str_doxy{};
     for (auto& c : source_file_content) {
@@ -51,10 +54,10 @@ pair<bool, string> FileUpdater::UpdateFile(const std::string& in_file_name, cons
             if (!last_write_time_str_doxy.compare(last_write_time_str_real)) {  // The dates and times are the same and you do not need to update the file.
                 answer.second = "no file update required.";
                 return answer;
-            } else { // Update the line with date and time.
+            } else {  // Update the line with date and time.
                 c = string(c.begin(), c.begin() + find_match.length() - 1);
                 c.append(last_write_time_str_real);
-                c.pop_back();
+                c.pop_back();  // Remove endl;
             }
         };
     }
@@ -62,16 +65,22 @@ pair<bool, string> FileUpdater::UpdateFile(const std::string& in_file_name, cons
         answer.second = "could not find date field.";
         return answer;
     }
-
     // Find the line with the name of the version and replace it if necessary.
-
+    for (auto& c : source_file_content) {
+        std::smatch find_match;
+        if (std::regex_search(c.cbegin(), c.cend(), find_match, regex(".*?@version[\\s\\t]+?[\\w]"))) {
+            c = string(c.begin(), c.begin() + find_match.length() - 1);
+            c.append(in_version_name);
+        };
+    }
     // Overwrite file.
     std::ofstream out_source_file(in_file_name);
-    for (const auto& c: source_file_content) out_source_file << c << std::endl;
+    for (const auto& c : source_file_content) out_source_file << c << std::endl;
     out_source_file.close();
     // Set the time of the last file change is the same as now specified in the doxygen description.
     boost::filesystem::last_write_time(in_file_name, tt);
 
+    answer.first = true;
     answer.second = "file has been updated.";
     return answer;
 }
