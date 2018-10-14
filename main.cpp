@@ -26,7 +26,8 @@ int main(const int argc, char* argv[]) {
         if (!current_command.compare("update")) {
             string version_name{};
             if (i < argc - 1) {
-                version_name = argv[++i];
+                for (int j = i + 1; j < argc; j++) version_name.append(std::string(argv[j]) + " ");
+                i = argc;
             } else {
                 cout << "You must give the version number, for example 'v 0.2.1'" << flush << endl;
                 return 0;

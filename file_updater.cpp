@@ -33,7 +33,7 @@ pair<bool, string> FileUpdater::UpdateFile(const std::string& in_file_name, cons
     tm t = *std::localtime(&tt);
     ostringstream oss_last_write_time;
     oss_last_write_time << std::setfill('0') << setw(2) << t.tm_mday << "." << setw(2) << t.tm_mon << "." << 1900 + t.tm_year << " " << setw(2) << t.tm_hour << ":" << setw(2) << t.tm_min << ":" << setw(2) << t.tm_sec
-                        << std::flush << std::flush << std::endl;
+                        << std::flush << std::endl;
     string last_write_time_str_real{oss_last_write_time.str()};
     last_write_time_str_real.pop_back();  // Remove endl;
 
@@ -57,7 +57,6 @@ pair<bool, string> FileUpdater::UpdateFile(const std::string& in_file_name, cons
             } else {  // Update the line with date and time.
                 c = string(c.begin(), c.begin() + find_match.length() - 1);
                 c.append(last_write_time_str_real);
-                c.pop_back();  // Remove endl;
             }
         };
     }
@@ -77,6 +76,7 @@ pair<bool, string> FileUpdater::UpdateFile(const std::string& in_file_name, cons
     std::ofstream out_source_file(in_file_name);
     for (const auto& c : source_file_content) out_source_file << c << std::endl;
     out_source_file.close();
+
     // Set the time of the last file change is the same as now specified in the doxygen description.
     boost::filesystem::last_write_time(in_file_name, tt);
 
