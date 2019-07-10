@@ -6,7 +6,8 @@
  * @brief    Class-singleton that updates file header if it is doxygen compatible.
  ************************************************************************************************************************************************************/
 #include "file_updater.h"
-#include <boost/filesystem.hpp>
+#include <chrono>
+#include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -29,11 +30,11 @@ pair<bool, string> FileUpdater::UpdateFile(const std::string& in_file_name, cons
         return answer;
     }
     // Get the last modified time of the file.
-    time_t tt = boost::filesystem::last_write_time(in_file_name);
+    auto tp = std::filesystem::last_write_time(in_file_name);
+    time_t tt = std::chrono::system_clock::to_time_t(std::filesystem::last_write_time(in_file_name));
     tm t = *std::localtime(&tt);
     ostringstream oss_last_write_time;
-    oss_last_write_time << std::setfill('0') << setw(2) << t.tm_mday << "." << setw(2) << t.tm_mon << "." << 1900 + t.tm_year << " " << setw(2) << t.tm_hour << ":" << setw(2) << t.tm_min << ":" << setw(2) << t.tm_sec
-                        << std::flush << std::endl;
+    oss_last_write_time << std::setfill('0') << setw(2) << t.tm_mday << "." << setw(2) << t.tm_mon << "." << 1900 + t.tm_year << " " << setw(2) << t.tm_hour << ":" << setw(2) << t.tm_min << ":" << setw(2) << t.tm_sec << std::flush << std::endl;
     string last_write_time_str_real{oss_last_write_time.str()};
     last_write_time_str_real.pop_back();  // Remove endl;
 
@@ -78,7 +79,7 @@ pair<bool, string> FileUpdater::UpdateFile(const std::string& in_file_name, cons
     out_source_file.close();
 
     // Set the time of the last file change is the same as now specified in the doxygen description.
-    boost::filesystem::last_write_time(in_file_name, tt);
+    //std::filesystem::last_write_time(in_file_name, tt);
 
     answer.first = true;
     answer.second = "file has been updated.";

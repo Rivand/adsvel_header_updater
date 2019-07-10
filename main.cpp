@@ -23,6 +23,8 @@ int main(const int argc, char* argv[]) {
     }
     for (int i = 1; i < argc; i++) {
         string current_command(argv[i]);
+
+        // argc == update
         if (!current_command.compare("update")) {
             string version_name{};
             if (i < argc - 1) {
@@ -44,6 +46,8 @@ int main(const int argc, char* argv[]) {
             cout << "All files have been processed." << flush << endl;
             continue;
         }
+
+        // argc == --help
         if (!current_command.compare("--help")) {
             cout << "It is help. I hope it helped you =)." << flush << endl;
             continue;
